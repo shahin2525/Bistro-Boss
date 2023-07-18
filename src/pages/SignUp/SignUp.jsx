@@ -1,19 +1,44 @@
+import { useContext } from "react";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const { createUser, userProfileUpdate } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
+    reset,
 
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
     console.log(data);
+    createUser(data.email, data.password).then((result) => {
+      const user = result.user;
+      console.log(user);
+      userProfileUpdate(data.name, data.photoUrl).then(() => {
+        reset();
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "User has been crated successfully ",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/");
+      });
+    });
   };
 
   return (
     <div className="hero min-h-screen bg-base-200">
+      <Helmet>
+        <title>Bistro | Sign up</title>
+      </Helmet>
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left">
           <h1 className="text-5xl font-bold">Sign up now!</h1>
@@ -35,7 +60,23 @@ const SignUp = () => {
                 placeholder="name"
                 className="input input-bordered"
               />
-              {errors.name && <span>This field is required</span>}
+              {errors.name?.type === "required" && (
+                <p className="text-red-600">name is required</p>
+              )}
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Photo-URL</span>
+              </label>
+              <input
+                {...register("photoUrl", { required: true })}
+                type="text"
+                placeholder="Photo-Url"
+                className="input input-bordered"
+              />
+              {errors.photoUrl?.type === "required" && (
+                <p className="text-red-600">Phot-Url is required</p>
+              )}
             </div>
             <div className="form-control">
               <label className="label">
@@ -48,7 +89,9 @@ const SignUp = () => {
                 name="email"
                 className="input input-bordered"
               />
-              {errors.email && <span>This field is required</span>}
+              {errors.email?.type === "required" && (
+                <p className="text-red-600">email is required</p>
+              )}
             </div>
             <div className="form-control">
               <label className="label">
@@ -59,6 +102,7 @@ const SignUp = () => {
                   required: true,
                   minLength: 6,
                   maxLength: 20,
+                  pattern: /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+/i,
                 })}
                 type="password"
                 placeholder="password"
@@ -66,6 +110,22 @@ const SignUp = () => {
               />
               {errors.password?.type === "required" && (
                 <p className="text-red-600">password is required</p>
+              )}
+              {errors.password?.type === "minLength" && (
+                <p className="text-red-600">
+                  password length must be 6 character
+                </p>
+              )}
+              {errors.password?.type === "maxLength" && (
+                <p className="text-red-600">
+                  password length must be less than 20 character
+                </p>
+              )}
+              {errors.password?.type === "pattern" && (
+                <p className="text-red-600">
+                  password must have one uppercase and one lowercase and one
+                  number and one special character
+                </p>
               )}
             </div>
             <div className="form-control mt-6">
