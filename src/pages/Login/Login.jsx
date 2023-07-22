@@ -9,12 +9,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 // sweet alert
 import Swal from "sweetalert2";
+import SocialLogin from "../Shared/SocialLogin/SocialLogin";
 
 // CommonJS
 
 const Login = () => {
-  let navigate = useNavigate();
-  let location = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const { login } = useContext(AuthContext);
   const [disabled, setDisabled] = useState(true);
@@ -125,6 +126,8 @@ const Login = () => {
             {" "}
             New here ?<Link to="/signup">create new account</Link>
           </p>
+
+          <SocialLogin></SocialLogin>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 import Swal from "sweetalert2";
+import SocialLogin from "../Shared/SocialLogin/SocialLogin";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -21,15 +22,28 @@ const SignUp = () => {
       const user = result.user;
       console.log(user);
       userProfileUpdate(data.name, data.photoUrl).then(() => {
-        reset();
-        Swal.fire({
-          position: "top-center",
-          icon: "success",
-          title: "User has been crated successfully ",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        navigate("/");
+        const saveUser = { name: data.name, email: data.email };
+        fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(saveUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.insertedId) {
+              reset();
+              Swal.fire({
+                position: "top-center",
+                icon: "success",
+                title: "User has been crated successfully ",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              navigate("/");
+            }
+          });
       });
     });
   };
@@ -140,6 +154,7 @@ const SignUp = () => {
             {" "}
             Already register ?<Link to="/login">go to login</Link>
           </p>
+          <SocialLogin></SocialLogin>
         </div>
       </div>
     </div>

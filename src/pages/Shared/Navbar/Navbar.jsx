@@ -1,39 +1,48 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../Provider/AuthProvider";
-
+// import { AuthContext } from "../../../providers/AuthProvider";
+import { BsCart } from "react-icons/bs";
+import UseCart from "../../../Hooks/UseCart";
 const Navbar = () => {
-  const handleLogout = () => {
+  const { user, logOut } = useContext(AuthContext);
+  const [cart] = UseCart();
+  const handleLogOut = () => {
     logOut()
       .then(() => {})
       .catch((error) => console.log(error));
   };
-  const { user, logOut } = useContext(AuthContext);
+
   const navOptions = (
     <>
       <li>
         <Link to="/">Home</Link>
       </li>
-
       <li>
-        <Link to="/menu">Menu</Link>
+        <Link to="/menu">Our Menu</Link>
       </li>
       <li>
-        <Link to="/order/salad">Order</Link>
+        <Link to="/order/salad">Order Food</Link>
       </li>
       <li>
         <Link to="/secret">Secret</Link>
       </li>
-
+      <li>
+        <Link to="/dashboard/mycart">
+          <button className="btn">
+            <BsCart />
+            <div className="badge badge-secondary">+{cart?.length || 0}</div>
+          </button>
+        </Link>
+      </li>
       {user ? (
         <>
-          <button onClick={handleLogout} className="btn btn-ghost">
-            Log out
+          <button onClick={handleLogOut} className="btn btn-ghost">
+            LogOut
           </button>
         </>
       ) : (
         <>
-          {" "}
           <li>
             <Link to="/login">Login</Link>
           </li>
@@ -44,7 +53,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="navbar bg-black text-white fixed z-10 bg-opacity-30 max-w-screen-xl">
+      <div className="navbar fixed z-10 bg-opacity-30 max-w-screen-xl bg-black text-white">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -65,7 +74,7 @@ const Navbar = () => {
             </label>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+              className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
             >
               {navOptions}
             </ul>
@@ -76,7 +85,7 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{navOptions}</ul>
         </div>
         <div className="navbar-end">
-          <a className="btn">Get Started</a>
+          <a className="btn">Get started</a>
         </div>
       </div>
     </>
