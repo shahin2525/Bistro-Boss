@@ -10,6 +10,9 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
+import axios from "axios";
+
+// import { data } from "autoprefixer";
 export const AuthContext = createContext(null);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -22,7 +25,19 @@ const AuthProvider = ({ children }) => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       console.log("current user", currentUser);
-      setLoading(false);
+      // get and set token
+      if (currentUser) {
+        axios
+          .post("http://localhost:5000/jwt", { email: currentUser.email })
+          .then((data) => {
+            // console.log(data.data.token);
+            localStorage.setItem("access-token", data.data.token);
+            setLoading(false);
+          });
+      } else {
+        localStorage.removeItem("access-token");
+      }
+      // setLoading(false);
     });
     return () => {
       return unSubscribe();
