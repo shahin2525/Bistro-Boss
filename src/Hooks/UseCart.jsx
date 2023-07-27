@@ -12,7 +12,7 @@ const UseCart = () => {
     enabled: !loading,
     // queryFn: async () => {
     //   const res = await fetch(
-    //     `http://localhost:5000/carts?email=${user?.email}`,
+    //     `https://bistro-boss-server-five-ochre.vercel.app/carts?email=${user?.email}`,
     //     {
     //       headers: {
     //         authorization: `bearer ${token}`,
@@ -23,7 +23,7 @@ const UseCart = () => {
     // },
     queryFn: async () => {
       const res = await axiosSecure(`/carts?email=${user?.email}`);
-      console.log("res from axios", res);
+      // console.log("res from axios", res);
       return res.data;
     },
   });

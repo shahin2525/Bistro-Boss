@@ -8,7 +8,7 @@ const AddItem = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
     reset,
   } = useForm();
   const img_hosting_url = `https://api.imgbb.com/1/upload?key=${img_hosting_token}`;
@@ -48,8 +48,8 @@ const AddItem = () => {
       });
     reset();
   };
-  console.log(errors);
-  console.log(img_hosting_token);
+  // console.log(errors);
+  // console.log(img_hosting_token);
   return (
     <div className=" w-11/12 px-10 ml-10 bg-slate-100">
       <SectionTitle
@@ -122,8 +122,12 @@ const AddItem = () => {
             className="file-input file-input-bordered w-full max-w-xs"
           />
         </div>
-
-        <input type="submit" value="Add Item" className="btn btn-sm mt-4" />
+        {/* <button className="btn btn-primary">Primary</button> */}
+        <input
+          type="submit"
+          value="Add Item"
+          className="btn btn-primary mt-4"
+        />
       </form>
     </div>
   );

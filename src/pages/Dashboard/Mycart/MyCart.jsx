@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import UseCart from "../../../Hooks/UseCart";
 import { FaTrashAlt } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 const MyCart = () => {
   const [cart, refetch] = UseCart();
   // how does reduce work
@@ -17,12 +18,15 @@ const MyCart = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/carts/${item._id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+        fetch(
+          `https://bistro-boss-server-five-ochre.vercel.app/carts/${item._id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
           .then((res) => res.json())
           .then((data) => {
             if (data.deletedCount > 0) {
@@ -41,7 +45,10 @@ const MyCart = () => {
       <div className="uppercase font-3xl flex justify-evenly items-center ">
         <h3 className="text-3xl">Total Items: {cart.length}</h3>
         <h3 className="text-3xl">Total Price: {total}</h3>
-        <button className="btn btn-warning btn-sm">Pay</button>
+        <Link to="/dashboard/payment">
+          {" "}
+          <button className="btn btn-warning btn-sm">Pay</button>
+        </Link>
       </div>
       {/* table */}
       <div className="overflow-x-auto">

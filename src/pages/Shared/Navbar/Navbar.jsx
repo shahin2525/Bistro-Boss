@@ -4,9 +4,11 @@ import { AuthContext } from "../../../Provider/AuthProvider";
 // import { AuthContext } from "../../../providers/AuthProvider";
 import { BsCart } from "react-icons/bs";
 import UseCart from "../../../Hooks/UseCart";
+import useAdmin from "../../../Hooks/useAdmin";
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const [cart] = UseCart();
+  const [isAdmin] = useAdmin();
   const handleLogOut = () => {
     logOut()
       .then(() => {})
@@ -24,9 +26,15 @@ const Navbar = () => {
       <li>
         <Link to="/order/salad">Order Food</Link>
       </li>
-      <li>
-        <Link to="/secret">Secret</Link>
-      </li>
+      {isAdmin ? (
+        <li>
+          <Link to="/dashboard/admin-home">Dashboard</Link>
+        </li>
+      ) : (
+        <li>
+          <Link to="/dashboard/user-home">Dashboard</Link>
+        </li>
+      )}
       <li>
         <Link to="/dashboard/mycart">
           <button className="btn">
